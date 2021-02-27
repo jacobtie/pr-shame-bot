@@ -4,6 +4,8 @@
   "description": "GitHub app that shames PRs that are too big",
   "main": "src/index.ts",
   "scripts": {
+    "start": "node build/index.js",
+    "postinstall": "tsc -p .",
     "dev": "nodemon -r dotenv/config"
   },
   "author": "Jacob Kedar Krevat <jacob.krevat@gmail.com>",
