@@ -22,7 +22,7 @@ function shouldShamePR(message: PullRequestMessage): boolean {
 
 function getCommentBody(): string {
   const imageUrl = getRandomImageUrl();
-  return `# Shame! Your PR is huge!\n![Shame](${imageUrl})`;
+  return `# Shame 🔔 Your PR is huge!\n![Shame](${imageUrl})`;
 }
 
 const imageUrls = [
