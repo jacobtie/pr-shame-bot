@@ -29,14 +29,14 @@ if (
 
 githubAppPem = githubAppPem.replace(/\\n/g, '\n');
 
-interface GithubRequestContext {
+interface GithubPullRequestContext {
   installationId: number;
   owner: string;
   repo: string;
   issueNumber: number;
 }
 
-type GithubPullRequestCommentContext = GithubRequestContext & {
+interface GithubPullRequestCommentContext extends GithubPullRequestContext {
   body: string;
 }
 
@@ -47,7 +47,7 @@ const githubAxiosInstance = axios.create({
   },
 });
 
-export async function hasPostedBefore(context: GithubRequestContext): Promise<boolean> {
+export async function hasPostedBefore(context: GithubPullRequestContext): Promise<boolean> {
   try {
     const { installationId, owner, repo, issueNumber } = context;
     const installationAccessToken = await getInstallationAccessToken(installationId);
