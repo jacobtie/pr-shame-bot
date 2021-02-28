@@ -8,13 +8,6 @@ const app = express();
 
 app.use(express.json());
 
-// Error handling middleware
-const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log(err);
-  next(err);
-};
-app.use(errorHandler);
-
 // GitHub Webhook route
 app.post('/', async (req, res, next) => {
   try {
@@ -37,6 +30,13 @@ app.post('/', async (req, res, next) => {
     next(err);
   }
 });
+
+// Error handling middleware
+const errorHandler: ErrorRequestHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log(err);
+  res.sendStatus(500);
+};
+app.use(errorHandler);
 
 const port = process.env.PORT || 1138;
 
