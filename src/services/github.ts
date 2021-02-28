@@ -2,6 +2,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import NodeCache from 'node-cache';
 import InstallationAccessTokenResponse from '../types/InstallationAccessTokenResponse';
+import GetIssueCommentsResponse from '../types/GetIssueCommentsResponse';
 
 const localCache = new NodeCache({
   stdTTL: 55 * 60, // 55 minutes
@@ -11,6 +12,7 @@ const {
   GITHUB_API_BASE: githubBaseUrl,
   GITHUB_API_ACCEPT_HEADER: githubApiAcceptHeader,
   GITHUB_APP_ID: githubAppId,
+  GITHUB_APP_NAME: githubAppName,
 } = process.env;
 
 let { GITHUB_APP_PEM: githubAppPem, } = process.env;
@@ -19,6 +21,7 @@ if (
   !githubBaseUrl
   || !githubApiAcceptHeader
   || !githubAppId
+  || !githubAppName
   || !githubAppPem
 ) {
   throw new Error('Missing GitHub env vars');
@@ -26,12 +29,15 @@ if (
 
 githubAppPem = githubAppPem.replace(/\\n/g, '\n');
 
-interface GithubPullRequestCommentContext {
+interface GithubRequestContext {
+  installationId: number;
   owner: string;
   repo: string;
   issueNumber: number;
+}
+
+type GithubPullRequestCommentContext = GithubRequestContext & {
   body: string;
-  installationId: number;
 }
 
 const githubAxiosInstance = axios.create({
@@ -41,10 +47,27 @@ const githubAxiosInstance = axios.create({
   },
 });
 
+export async function hasPostedBefore(context: GithubRequestContext): Promise<boolean> {
+  try {
+    const { installationId, owner, repo, issueNumber } = context;
+    const installationAccessToken = await getInstallationAccessToken(installationId);
+    const res = await githubAxiosInstance.get<GetIssueCommentsResponse>(`/repos/${owner}/${repo}/issues/${issueNumber}/comments`, {
+      headers: {
+        Authorization: `Token ${installationAccessToken}`,
+      },
+    });
+    return res.data.some(comment => comment.user.login === githubAppName);
+    return false;
+  } catch (err) {
+    console.log(err);
+    return true; // Say we posted before so we don't double post
+  }
+}
+
 export async function makeComment(context: GithubPullRequestCommentContext): Promise<void> {
   try {
-    const installationAccessToken = await getInstallationAccessToken(context.installationId);
-    const { owner, repo, issueNumber, body } = context;
+    const { installationId, owner, repo, issueNumber, body } = context;
+    const installationAccessToken = await getInstallationAccessToken(installationId);
     await githubAxiosInstance.post(`/repos/${owner}/${repo}/issues/${issueNumber}/comments`, { body }, {
       headers: {
         Authorization: `Token ${installationAccessToken}`,

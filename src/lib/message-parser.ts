@@ -10,6 +10,7 @@ export default function parseMessage(payload: PullRequestPayload): PullRequestMe
       changed_files: changedFiles,
       number: issueNumber,
     } = pullRequest;
+
     if (additions != null && deletions != null && changedFiles != null && issueNumber != null) {
       return {
         status: 'ok',

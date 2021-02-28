@@ -1,15 +1,27 @@
 import { PullRequestMessage } from '../types/Messages';
-import { makeComment } from '../services/github';
+import { hasPostedBefore, makeComment } from '../services/github';
 
 export default async function shamePR(message: PullRequestMessage): Promise<void> {
   if (!shouldShamePR(message)) {
     return; // Not big enough to shame
   }
-  await makeComment({
+
+  const postedBefore = await hasPostedBefore({
     installationId: message.installationId,
-    issueNumber: message.repository.issueNumber,
     owner: message.repository.owner,
     repo: message.repository.repoName,
+    issueNumber: message.repository.issueNumber,
+  });
+
+  if (postedBefore) {
+    return; // Do not post more than once
+  }
+
+  await makeComment({
+    installationId: message.installationId,
+    owner: message.repository.owner,
+    repo: message.repository.repoName,
+    issueNumber: message.repository.issueNumber,
     body: getCommentBody(),
   });
 }
