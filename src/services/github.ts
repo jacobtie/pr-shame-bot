@@ -57,7 +57,6 @@ export async function hasPostedBefore(context: GithubRequestContext): Promise<bo
       },
     });
     return res.data.some(comment => comment.user.login === githubAppName);
-    return false;
   } catch (err) {
     console.log(err);
     return true; // Say we posted before so we don't double post
