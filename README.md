@@ -14,7 +14,7 @@ The source code for the PR Shame Bot is open source under the MIT license and is
 
 ## Security
 
-All payloads sent to the bot's server are verified to have originated from GitHub using a secret provided by GitHub. Furthermore, all secrets relating to authentication and authorization of the bot to the GitHub API are protected on the bot's server.
+All payloads sent to the bot's server are verified to have originated from GitHub using a secret stored in GitHub. Furthermore, all secrets relating to authentication and authorization of the bot to the GitHub API are protected on the bot's server.
 
 The bot's permissions are set so that the bot cannot read code from repositories on which it is installed. The bot can only read metadata from a pull request and absolutely no data is permanently stored.
 
