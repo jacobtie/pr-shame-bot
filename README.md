@@ -2,7 +2,7 @@
 
 The PR Shame Bot is a GitHub application which, when installed on a repository, posts a comment shaming a pull request for having more than 1000 changes.
 
-![Shame Comment](https://github.com/jacobtie/pr-shame-bot/tree/main/assets/shame-bot-animated.gif)
+![Shame Comment](https://github.com/jacobtie/pr-shame-bot/blob/main/assets/shame-bot-animated.gif)
 
 The PR Shame Bot will only ever post once on an individual pull request.
 
