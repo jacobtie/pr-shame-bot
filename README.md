@@ -22,4 +22,4 @@ The bot's permissions are set so that the bot cannot read code from repositories
 
 The GitHub application uses a web hook whenever a pull request is made on an installed repository. This web hook hits the single endpoint in this server. The server was built in Node.js with TypeScript and the express.js microframework.
 
-The server itself is deployed to heroku using a GitHub action on a merge to the `main` branch.
+The server itself is deployed to render on a merge to the `main` branch.
