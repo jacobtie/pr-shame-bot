@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "node build/index.js",
-    "postinstall": "tsc -p .",
+    "build": "tsc -p .",
     "dev": "nodemon -r dotenv/config"
   },
   "author": "Jacob Kedar Krevat <jacob.krevat@gmail.com>",
