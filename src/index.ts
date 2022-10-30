@@ -11,7 +11,7 @@ app.use(express.json());
 // GitHub Webhook route
 app.post('/', async (req, res, next) => {
   try {
-    const payload = req.body as PullRequestPayload;
+    const payload = req.body as Partial<PullRequestPayload>;
     const hash = req.get('X-Hub-Signature-256');
     if (!hash || !isSenderValid(payload, hash)) {
       return res.sendStatus(401);

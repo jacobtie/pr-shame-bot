@@ -1,7 +1,7 @@
 import PullRequestPayload from '../types/PullRequestPayload';
 import { BadMessage, PullRequestMessage } from '../types/Messages';
 
-export default function parseMessage(payload: PullRequestPayload): PullRequestMessage | BadMessage {
+export default function parseMessage(payload: Partial<PullRequestPayload>): PullRequestMessage | BadMessage {
   if ((payload?.action === 'opened' || payload?.action === 'synchronize') && payload.pull_request) {
     const { pull_request: pullRequest, repository, installation } = payload;
     const {
@@ -11,7 +11,15 @@ export default function parseMessage(payload: PullRequestPayload): PullRequestMe
       number: issueNumber,
     } = pullRequest;
 
-    if (additions != null && deletions != null && changedFiles != null && issueNumber != null) {
+    if (
+      additions != null
+      && deletions != null
+      && changedFiles != null
+      && issueNumber != null
+      && installation?.id != null
+      && repository?.owner?.login != null
+      && repository?.name != null
+    ) {
       return {
         status: 'ok',
         installationId: installation.id,
